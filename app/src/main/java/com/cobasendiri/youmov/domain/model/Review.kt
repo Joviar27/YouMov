@@ -1,4 +1,4 @@
-package com.cobasendiri.youmov.model
+package com.cobasendiri.youmov.domain.model
 
 data class Review(
     val author: String,

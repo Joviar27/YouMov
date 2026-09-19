@@ -22,7 +22,7 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.cobasendiri.youmov.R
-import com.cobasendiri.youmov.model.Movie
+import com.cobasendiri.youmov.domain.model.Movie
 import com.cobasendiri.youmov.ui.component.YouMovTopBar
 import com.cobasendiri.youmov.ui.theme.DarkBackground
 import com.cobasendiri.youmov.ui.theme.YouMovTheme

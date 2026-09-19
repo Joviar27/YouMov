@@ -1,6 +1,6 @@
 package com.cobasendiri.youmov.ui.screen.detail
 
-import com.cobasendiri.youmov.model.Review
+import com.cobasendiri.youmov.domain.model.Review
 
 data class DetailScreenState(
     val imageUri: String,

@@ -59,12 +59,14 @@ fun ReviewItem(
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.titleSmall
                 )
-                Text(
-                    text = "$reviewRating/10",
-                    style = MaterialTheme.typography.titleSmall.copy(
-                        fontWeight = FontWeight.Normal
+                if(reviewRating.isNotEmpty()){
+                    Text(
+                        text = "$reviewRating/10",
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            fontWeight = FontWeight.Normal
+                        )
                     )
-                )
+                }
             }
             Text(
                 text = reviewDate,

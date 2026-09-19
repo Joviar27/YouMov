@@ -13,7 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cobasendiri.youmov.R
-import com.cobasendiri.youmov.model.FavoriteMovie
+import com.cobasendiri.youmov.domain.model.FavoriteMovie
 import com.cobasendiri.youmov.ui.component.FavoriteItem
 import com.cobasendiri.youmov.ui.component.YouMovTopBar
 import com.cobasendiri.youmov.ui.theme.DarkBackground

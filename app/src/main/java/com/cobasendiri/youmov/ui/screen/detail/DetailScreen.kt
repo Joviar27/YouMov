@@ -31,7 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.cobasendiri.youmov.R
-import com.cobasendiri.youmov.model.Review
+import com.cobasendiri.youmov.domain.model.Review
 import com.cobasendiri.youmov.ui.component.LoadingIndicator
 import com.cobasendiri.youmov.ui.component.RefreshButton
 import com.cobasendiri.youmov.ui.component.ReviewItem

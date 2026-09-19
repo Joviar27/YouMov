@@ -2,7 +2,6 @@ package com.cobasendiri.youmov.ui.screen.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -18,8 +17,7 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.cobasendiri.youmov.model.Movie
-import com.cobasendiri.youmov.ui.component.LargeBannerItem
+import com.cobasendiri.youmov.domain.model.Movie
 import com.cobasendiri.youmov.ui.component.LoadingIndicator
 import com.cobasendiri.youmov.ui.component.LoadingMoreItem
 import com.cobasendiri.youmov.ui.component.RefreshButton
