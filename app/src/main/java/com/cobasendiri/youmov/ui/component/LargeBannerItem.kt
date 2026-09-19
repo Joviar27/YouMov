@@ -42,7 +42,7 @@ fun LargeBannerItem(
     onClick: () -> Unit
 ) {
     Box(Modifier
-        .size(width = 360.dp, height = 200.dp)
+        .size(width = 320.dp, height = 160.dp)
         .clip(RoundedCornerShape(16.dp))
         .clickable(onClick = onClick)
     ){

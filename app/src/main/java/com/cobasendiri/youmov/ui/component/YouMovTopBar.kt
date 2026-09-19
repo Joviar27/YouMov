@@ -27,7 +27,7 @@ import com.cobasendiri.youmov.ui.theme.YouMovTheme
 
 @Composable
 fun YouMovTopBar(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     titleText: String,
     backgroundColor: Color = DarkSurface,
     endActions: @Composable () -> Unit = {},

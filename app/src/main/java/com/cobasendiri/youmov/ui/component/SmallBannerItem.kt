@@ -33,9 +33,9 @@ fun SmallBannerItem(
     releaseInfo: String,
     onClick: () -> Unit
 ) {
-    Column(Modifier.width(200.dp)){
+    Column(Modifier.width(160.dp)){
         AsyncImage(
-            modifier = Modifier.size(200.dp)
+            modifier = Modifier.size(160.dp)
                 .clip(RoundedCornerShape(16.dp))
                 .clickable(onClick = onClick),
             model = imageUri,
