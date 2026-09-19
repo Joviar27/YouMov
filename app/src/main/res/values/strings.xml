@@ -10,4 +10,7 @@
     <string name="detail">Detail</string>
     <string name="description">Description</string>
     <string name="review">Review</string>
+
+    <!--  Favorite  -->
+    <string name="favorite">Favorite</string>
 </resources>

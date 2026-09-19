@@ -35,7 +35,7 @@ fun FavoriteItem(
     Row(Modifier.clickable(onClick = onClick)) {
         AsyncImage(
             modifier = Modifier
-                .size(200.dp)
+                .size(160.dp)
                 .clip(RoundedCornerShape(16.dp)),
             model = imageUri,
             placeholder = painterResource(R.drawable.placeholder_square),
