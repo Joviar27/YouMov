@@ -50,9 +50,9 @@ fun HomeScreen(
 
         val dummyPaging = MutableStateFlow(PagingData.from(
             listOf(
-                Movie("1","", "Movie One", "2024"),
-                Movie("2","", "Movie Two", "2022"),
-                Movie("3","", "Movie Three", "2020")
+                Movie(1,"", "Movie One", "2024"),
+                Movie(2,"", "Movie Two", "2022"),
+                Movie(3,"", "Movie Three", "2020")
             )
         ))
         val dummy = dummyPaging.collectAsLazyPagingItems()
@@ -144,9 +144,9 @@ fun HomeScreenContent(
 fun HomeScreenContentPrev() {
     val dummyPaging = MutableStateFlow(PagingData.from(
         listOf(
-            Movie("1","", "Movie One", "2024"),
-            Movie("2","", "Movie Two", "2022"),
-            Movie("3","", "Movie Three", "2020")
+            Movie(1,"", "Movie One", "2024"),
+            Movie(2,"", "Movie Two", "2022"),
+            Movie(3,"", "Movie Three", "2020")
         )
     ))
     val dummy = dummyPaging.collectAsLazyPagingItems()
