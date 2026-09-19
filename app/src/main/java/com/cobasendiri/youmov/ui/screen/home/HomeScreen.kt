@@ -39,7 +39,7 @@ fun HomeScreen(
                 endActions = {
                     IconButton(onNavigateToFavorite) {
                         Image(
-                            painter = painterResource(R.drawable.ic_favorite_white_32),
+                            painter = painterResource(R.drawable.ic_favorite_filled_32),
                             contentDescription = null
                         )
                     }

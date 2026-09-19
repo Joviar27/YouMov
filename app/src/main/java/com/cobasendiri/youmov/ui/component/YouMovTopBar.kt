@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -72,7 +71,7 @@ fun YouMovTopBarPrev() {
                 endActions = {
                     IconButton({}) {
                         Image(
-                            painter = painterResource(R.drawable.ic_favorite_white_32),
+                            painter = painterResource(R.drawable.ic_favorite_filled_32),
                             contentDescription = null
                         )
                     }
