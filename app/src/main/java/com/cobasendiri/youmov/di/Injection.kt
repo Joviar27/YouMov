@@ -1,8 +1,8 @@
 package com.cobasendiri.youmov.di
 
 import com.cobasendiri.youmov.data.MovieRepository
-import com.cobasendiri.youmov.data.network.ApiClient
-import com.cobasendiri.youmov.data.network.ApiService
+import com.cobasendiri.youmov.data.remote.network.ApiClient
+import com.cobasendiri.youmov.data.remote.network.ApiService
 
 object Injection {
 

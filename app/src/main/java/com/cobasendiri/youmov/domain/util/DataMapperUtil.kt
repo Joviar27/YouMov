@@ -1,8 +1,8 @@
 package com.cobasendiri.youmov.domain.util
 
-import com.cobasendiri.youmov.data.response.DetailMovieResponse
-import com.cobasendiri.youmov.data.response.MovieItemResponse
-import com.cobasendiri.youmov.data.response.ReviewItemResponse
+import com.cobasendiri.youmov.data.remote.response.DetailMovieResponse
+import com.cobasendiri.youmov.data.remote.response.MovieItemResponse
+import com.cobasendiri.youmov.data.remote.response.ReviewItemResponse
 import com.cobasendiri.youmov.domain.model.Movie
 import com.cobasendiri.youmov.domain.model.MovieDetail
 import com.cobasendiri.youmov.domain.model.Review

@@ -1,9 +1,9 @@
-package com.cobasendiri.youmov.data
+package com.cobasendiri.youmov.data.remote
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.cobasendiri.youmov.data.response.MovieItemResponse
-import com.cobasendiri.youmov.data.response.MovieListResponse
+import com.cobasendiri.youmov.data.remote.response.MovieItemResponse
+import com.cobasendiri.youmov.data.remote.response.MovieListResponse
 
 class MoviePagingSource(
     private val getMovies: suspend (page: Int) -> MovieListResponse

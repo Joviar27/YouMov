@@ -1,4 +1,4 @@
-package com.cobasendiri.youmov.data.network
+package com.cobasendiri.youmov.data.remote.network
 
 import com.cobasendiri.youmov.BuildConfig
 import okhttp3.Interceptor

@@ -1,4 +1,4 @@
-package com.cobasendiri.youmov.data.response
+package com.cobasendiri.youmov.data.remote.response
 
 import com.google.gson.annotations.SerializedName
 

@@ -1,8 +1,8 @@
-package com.cobasendiri.youmov.data.network
+package com.cobasendiri.youmov.data.remote.network
 
-import com.cobasendiri.youmov.data.response.DetailMovieResponse
-import com.cobasendiri.youmov.data.response.MovieListResponse
-import com.cobasendiri.youmov.data.response.MovieReviewListResponse
+import com.cobasendiri.youmov.data.remote.response.DetailMovieResponse
+import com.cobasendiri.youmov.data.remote.response.MovieListResponse
+import com.cobasendiri.youmov.data.remote.response.MovieReviewListResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

@@ -4,7 +4,8 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.cobasendiri.youmov.data.network.ApiService
+import com.cobasendiri.youmov.data.remote.MoviePagingSource
+import com.cobasendiri.youmov.data.remote.network.ApiService
 import com.cobasendiri.youmov.domain.Result
 import com.cobasendiri.youmov.domain.model.Movie
 import com.cobasendiri.youmov.domain.model.MovieDetail
