@@ -18,11 +18,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.cobasendiri.youmov.R
 import com.cobasendiri.youmov.domain.model.Movie
+import com.cobasendiri.youmov.ui.ViewModelFactory
 import com.cobasendiri.youmov.ui.component.YouMovTopBar
 import com.cobasendiri.youmov.ui.theme.DarkBackground
 import com.cobasendiri.youmov.ui.theme.YouMovTheme
@@ -30,7 +32,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun HomeScreen(
-    onNavigateToFavorite: () -> Unit
+    onNavigateToFavorite: () -> Unit,
+    onNavigateToDetail: (Int) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -48,30 +51,44 @@ fun HomeScreen(
         }
     ){ innerPadding ->
 
-        val dummyPaging = MutableStateFlow(PagingData.from(
-            listOf(
-                Movie(1,"", "Movie One", "2024"),
-                Movie(2,"", "Movie Two", "2022"),
-                Movie(3,"", "Movie Three", "2020")
-            )
-        ))
-        val dummy = dummyPaging.collectAsLazyPagingItems()
+        val viewModel: HomeViewModel = viewModel(
+            factory = ViewModelFactory.getInstance()
+        )
+
+        val popularMovies = viewModel.popularMovies.collectAsLazyPagingItems()
+        val topRatedMovies = viewModel.topRatedMovies.collectAsLazyPagingItems()
+        val nowPlayingMovies = viewModel.nowPlayingMovies.collectAsLazyPagingItems()
 
         HomeScreenContent(
             innerPadding,
-            popularMovies = dummy,
-            topRatedMovies = dummy,
-            nowPlayingMovies =dummy
+            popularMovies = popularMovies,
+            topRatedMovies = topRatedMovies,
+            nowPlayingMovies = nowPlayingMovies
         ) { event ->
             when(event){
                 is HomeScreenEvent.OnMovieClicked -> {
-
+                    onNavigateToDetail.invoke(event.movieId)
                 }
-                is HomeScreenEvent.OnRefreshClicked -> {
-
+                is HomeScreenEvent.OnPopularRefreshClicked -> {
+                    popularMovies.refresh()
+                }
+                is HomeScreenEvent.OnPopularRetryClicked ->{
+                    popularMovies.retry()
+                }
+                is HomeScreenEvent.OnTopRatedRefreshClicked -> {
+                    topRatedMovies.refresh()
+                }
+                is HomeScreenEvent.OnTopRatedRetryClicked->{
+                    topRatedMovies.retry()
+                }
+                is HomeScreenEvent.OnNowPlayingRefreshClicked -> {
+                    nowPlayingMovies.refresh()
+                }
+                is HomeScreenEvent.OnNowPlayingRetryClicked ->{
+                    nowPlayingMovies.retry()
                 }
                 is HomeScreenEvent.OnFavoriteMenuClicked -> {
-
+                    onNavigateToFavorite.invoke()
                 }
             }
         }
@@ -100,10 +117,13 @@ fun HomeScreenContent(
         PagingLandscapeMovieList(
             moviePagingItems = popularMovies,
             onItemClick = {
-                event.invoke(HomeScreenEvent.OnMovieClicked(""))
+                event.invoke(HomeScreenEvent.OnMovieClicked(it))
             },
             onRefreshClick = {
-                event.invoke(HomeScreenEvent.OnRefreshClicked)
+                event.invoke(HomeScreenEvent.OnPopularRefreshClicked)
+            },
+            onRetryClick = {
+                event.invoke(HomeScreenEvent.OnPopularRetryClicked)
             }
         )
         Spacer(Modifier.height(24.dp))
@@ -113,12 +133,15 @@ fun HomeScreenContent(
         )
         Spacer(Modifier.height(8.dp))
         PagingSquareMovieList(
-            moviePagingItems = popularMovies,
+            moviePagingItems = topRatedMovies,
             onItemClick = {
-                event.invoke(HomeScreenEvent.OnMovieClicked(""))
+                event.invoke(HomeScreenEvent.OnMovieClicked(it))
             },
             onRefreshClick = {
-                event.invoke(HomeScreenEvent.OnRefreshClicked)
+                event.invoke(HomeScreenEvent.OnTopRatedRefreshClicked)
+            },
+            onRetryClick = {
+                event.invoke(HomeScreenEvent.OnTopRatedRetryClicked)
             }
         )
         Spacer(Modifier.height(24.dp))
@@ -128,12 +151,15 @@ fun HomeScreenContent(
         )
         Spacer(Modifier.height(8.dp))
         PagingSquareMovieList(
-            moviePagingItems = popularMovies,
+            moviePagingItems = nowPlayingMovies,
             onItemClick = {
-                event.invoke(HomeScreenEvent.OnMovieClicked(""))
+                event.invoke(HomeScreenEvent.OnMovieClicked(it))
             },
             onRefreshClick = {
-                event.invoke(HomeScreenEvent.OnRefreshClicked)
+                event.invoke(HomeScreenEvent.OnNowPlayingRefreshClicked)
+            },
+            onRetryClick = {
+                event.invoke(HomeScreenEvent.OnNowPlayingRetryClicked)
             }
         )
     }
@@ -156,13 +182,5 @@ fun HomeScreenContentPrev() {
             innerPadding = PaddingValues(0.dp),
             dummy,dummy,dummy
         ){}
-    }
-}
-
-@Preview
-@Composable
-fun HomeScreenPrev(){
-    YouMovTheme {
-        HomeScreen {  }
     }
 }

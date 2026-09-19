@@ -10,7 +10,7 @@ import com.cobasendiri.youmov.domain.model.Review
 fun MovieItemResponse.mapToLandscapeMovie(): Movie{
     return Movie(
         id = this.id ?: 0,
-        imageUri = this.backdropPath ?: "",
+        imagePath = this.backdropPath ?: "",
         title = this.title ?: "",
         releaseInfo = this.releaseDate ?: ""
     )
@@ -19,7 +19,7 @@ fun MovieItemResponse.mapToLandscapeMovie(): Movie{
 fun MovieItemResponse.mapToSquareMovie(): Movie{
     return Movie(
         id = this.id ?: 0,
-        imageUri = this.posterPath ?: "",
+        imagePath = this.posterPath ?: "",
         title = this.title ?: "",
         releaseInfo = this.releaseDate ?: ""
     )

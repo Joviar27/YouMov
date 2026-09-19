@@ -30,8 +30,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 fun PagingLandscapeMovieList(
     modifier: Modifier = Modifier,
     moviePagingItems: LazyPagingItems<Movie>,
-    onItemClick: () -> Unit,
-    onRefreshClick: () -> Unit
+    onItemClick: (Int) -> Unit,
+    onRefreshClick: () -> Unit,
+    onRetryClick: () -> Unit
 ) {
     val lazyListState = rememberLazyListState()
 
@@ -65,9 +66,11 @@ fun PagingLandscapeMovieList(
                 moviePagingItems[index]?.let {
                     LargeBannerItem(
                         title = it.title,
-                        imageUri = it.imageUri,
+                        imagePath = it.imagePath,
                         releaseInfo = it.releaseInfo,
-                        onClick = onItemClick
+                        onClick = {
+                            onItemClick.invoke(it.id)
+                        }
                     )
                 }
             }
@@ -78,7 +81,7 @@ fun PagingLandscapeMovieList(
             }
             if (appendError){
                 item {
-                    RefreshItem(onClick = onRefreshClick)
+                    RefreshItem(onClick = onRetryClick)
                 }
             }
         }
@@ -100,7 +103,8 @@ fun PagingLandscapeMovieListPreview(){
         PagingLandscapeMovieList(
             moviePagingItems = dummy,
             onItemClick = {},
-            onRefreshClick = {}
+            onRefreshClick = {},
+            onRetryClick = {}
         )
     }
 }

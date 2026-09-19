@@ -24,6 +24,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String","BASE_URL","\"https://api.themoviedb.org/3\"")
+        buildConfigField("String","IMAGE_BASE_URL","\"https://image.tmdb.org/t/p/original\"")
         buildConfigField("String","API_KEY","\"$apiKey\"")
     }
 
@@ -79,6 +80,9 @@ dependencies {
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
+
+    //ViewModel
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
 }
 
 val localProperties = Properties().apply {

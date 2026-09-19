@@ -30,8 +30,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 fun PagingSquareMovieList(
     modifier: Modifier = Modifier,
     moviePagingItems: LazyPagingItems<Movie>,
-    onItemClick: () -> Unit,
-    onRefreshClick: () -> Unit
+    onItemClick: (Int) -> Unit,
+    onRefreshClick: () -> Unit,
+    onRetryClick: () -> Unit
 ) {
     val lazyListState = rememberLazyListState()
 
@@ -44,7 +45,8 @@ fun PagingSquareMovieList(
         if(refreshLoading) lazyListState.scrollToItem(0)
     }
 
-    Box(modifier.fillMaxWidth()
+    Box(modifier
+        .fillMaxWidth()
         .height(210.dp)
     ) {
         if(refreshLoading){
@@ -65,9 +67,11 @@ fun PagingSquareMovieList(
                 moviePagingItems[index]?.let {
                     SmallBannerItem(
                         title = it.title,
-                        imageUri = it.imageUri,
+                        imagePath = it.imagePath,
                         releaseInfo = it.releaseInfo,
-                        onClick = onItemClick
+                        onClick = {
+                            onItemClick.invoke(it.id)
+                        }
                     )
                 }
             }
@@ -78,7 +82,7 @@ fun PagingSquareMovieList(
             }
             if (appendError){
                 item {
-                    RefreshItem(onClick = onRefreshClick)
+                    RefreshItem(onClick = onRetryClick)
                 }
             }
         }
@@ -101,7 +105,8 @@ fun PagingSquareMovieListPreview(){
         PagingSquareMovieList(
             moviePagingItems = dummy,
             onItemClick = {},
-            onRefreshClick = {}
+            onRefreshClick = {},
+            onRetryClick = {}
         )
     }
 }
