@@ -42,9 +42,10 @@ fun youMovTypography(): Typography{
         ),
         titleSmall = baseline.titleSmall.copy(
             fontFamily = poppinsFontFamily,
+            fontSize = 16.sp,
             fontWeight = FontWeight.SemiBold,
             color = TextPrimary
-        ), //14.sp,
+        ),
         bodyLarge = baseline.bodyLarge.copy(fontFamily = poppinsFontFamily),//16.sp
         bodyMedium = baseline.bodyMedium.copy(
             fontFamily = poppinsFontFamily,
@@ -52,16 +53,16 @@ fun youMovTypography(): Typography{
             color = TextSecondary
         ),//14.sp
         bodySmall = baseline.bodySmall.copy(fontFamily = poppinsFontFamily),
-        labelLarge = baseline.labelLarge.copy(fontFamily = poppinsFontFamily),
-        labelMedium = baseline.labelMedium.copy(
+        labelLarge = baseline.labelLarge.copy(
             fontFamily = poppinsFontFamily,
             fontWeight = FontWeight.Medium,
             color = TextMuted
-        ),//12.sp
-        labelSmall = baseline.labelSmall.copy(
+        ),//14.sp
+        labelMedium = baseline.labelMedium.copy(
             fontFamily = poppinsFontFamily,
             fontWeight = FontWeight.Normal,
             color = TextMuted
-        ),//11.sp
+        ),//12.sp
+        labelSmall = baseline.labelSmall.copy(fontFamily = poppinsFontFamily),//11.sp
     )
 }
