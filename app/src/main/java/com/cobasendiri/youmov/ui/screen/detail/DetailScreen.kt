@@ -1,5 +1,6 @@
 package com.cobasendiri.youmov.ui.screen.detail
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -46,6 +47,7 @@ import com.cobasendiri.youmov.ui.component.LoadingIndicator
 import com.cobasendiri.youmov.ui.component.RefreshButton
 import com.cobasendiri.youmov.ui.component.ReviewItem
 import com.cobasendiri.youmov.ui.component.YouMovTopBar
+import com.cobasendiri.youmov.ui.deeplink.DeeplinkUtil
 import com.cobasendiri.youmov.ui.theme.DarkBackground
 import com.cobasendiri.youmov.ui.theme.DarkSurface
 import com.cobasendiri.youmov.ui.theme.Grey
@@ -111,7 +113,13 @@ fun DetailScreen(
                     viewModel.updateFavorite()
                 }
                 is DetailScreenEvent.OnShareClick ->{
-
+                    val deepLink = DeeplinkUtil.generateDetailDeepLink(movieId)
+                    val sendIntent = Intent(Intent.ACTION_SEND).apply {
+                        putExtra(Intent.EXTRA_TEXT, "Check out this movie i found: $deepLink")
+                        type = "text/plain"
+                    }
+                    val shareIntent = Intent.createChooser(sendIntent, "Share link via")
+                    context.startActivity(shareIntent)
                 }
                 is DetailScreenEvent.OnReviewSectionClick ->{
                     viewModel.getMovieReviews(movieId, event.number)
