@@ -70,7 +70,7 @@ fun FavoriteScreenContent(
         items(favoriteMovies.count()){ index ->
             favoriteMovies[index].let {
                 FavoriteItem(
-                    imageUri = it.imageUri,
+                    imageUri = it.imagePath,
                     title = it.title,
                     releaseInfo = it.releaseInfo,
                     overview = it.overview
