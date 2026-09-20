@@ -16,33 +16,24 @@ import com.cobasendiri.youmov.domain.util.mapToFavoriteMovieEntity
 import com.cobasendiri.youmov.domain.util.mapToFavoriteMovieList
 import com.cobasendiri.youmov.domain.util.mapToLandscapeMovie
 import com.cobasendiri.youmov.domain.util.mapToMovieDetail
-import com.cobasendiri.youmov.domain.util.mapToReview
 import com.cobasendiri.youmov.domain.util.mapToPortraitMovie
-import kotlinx.coroutines.CoroutineDispatcher
+import com.cobasendiri.youmov.domain.util.mapToReview
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class MovieRepository(
+@Singleton
+class MovieRepository @Inject constructor(
     private val apiService: ApiService,
-    private val favoriteMovieDao: FavoriteMovieDao,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val favoriteMovieDao: FavoriteMovieDao
 ) {
     companion object {
         private const val PAGE_SIZE = 20
-
-        @Volatile
-        private var instance: MovieRepository? = null
-
-        fun getInstance(apiService: ApiService, favoriteMovieDao: FavoriteMovieDao): MovieRepository {
-            return instance ?: synchronized(this) {
-                instance ?: MovieRepository(apiService, favoriteMovieDao)
-                    .also { instance = it }
-            }
-        }
     }
 
     private val pagingConfig = PagingConfig(
@@ -62,7 +53,7 @@ class MovieRepository(
             pagingData.map {
                 it.mapToLandscapeMovie()
             }
-        }
+        }.flowOn(Dispatchers.IO)
     }
 
     fun getTopRatedMovieList(): Flow<PagingData<Movie>> {
@@ -76,7 +67,7 @@ class MovieRepository(
             pagingData.map {
                 it.mapToPortraitMovie()
             }
-        }
+        }.flowOn(Dispatchers.IO)
     }
 
     fun getNowPlayingMovieList(): Flow<PagingData<Movie>> {
@@ -90,12 +81,12 @@ class MovieRepository(
             pagingData.map {
                 it.mapToPortraitMovie()
             }
-        }
+        }.flowOn(Dispatchers.IO)
     }
 
     suspend fun getMovieDetail(
         movieId: Int
-    ): Result<MovieDetail> = withContext(dispatcher){
+    ): Result<MovieDetail> = withContext(Dispatchers.IO){
         try {
             val result = apiService.getMovieDetail(movieId).mapToMovieDetail()
             Result.Success(result)
@@ -107,7 +98,7 @@ class MovieRepository(
     suspend fun getMovieReview(
         movieId: Int,
         page: Int
-    ): Result<MovieReview> = withContext(dispatcher){
+    ): Result<MovieReview> = withContext(Dispatchers.IO){
         try {
             val result = apiService.getMovieReviews(movieId, page).let {
                 MovieReview(
@@ -129,7 +120,7 @@ class MovieRepository(
             Result.Success(it.mapToFavoriteMovieList())
         }.catch {
             Result.Error(it)
-        }.flowOn(dispatcher)
+        }.flowOn(Dispatchers.IO)
     }
 
     fun isMovieFavorite(movieId: Int): Flow<Result<Boolean>>{
@@ -137,12 +128,12 @@ class MovieRepository(
             Result.Success(it)
         }.catch {
             Result.Error(it)
-        }.flowOn(dispatcher)
+        }.flowOn(Dispatchers.IO)
     }
 
     suspend fun addFavoriteMovie(
         favoriteMovie: FavoriteMovie
-    ): Result<Unit> = withContext(dispatcher){
+    ): Result<Unit> = withContext(Dispatchers.IO){
         try {
             val result = favoriteMovieDao.addFavorite(favoriteMovie.mapToFavoriteMovieEntity())
             Result.Success(result)
@@ -153,7 +144,7 @@ class MovieRepository(
 
     suspend fun removeFavoriteMovie(
         movieId: Int
-    ): Result<Unit> = withContext(dispatcher){
+    ): Result<Unit> = withContext(Dispatchers.IO){
         try {
             val result = favoriteMovieDao.removeFavorite(movieId)
             Result.Success(result)

@@ -36,13 +36,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.cobasendiri.youmov.BuildConfig
 import com.cobasendiri.youmov.R
 import com.cobasendiri.youmov.domain.model.ReviewItem
-import com.cobasendiri.youmov.ui.ViewModelFactory
 import com.cobasendiri.youmov.ui.component.LoadingIndicator
 import com.cobasendiri.youmov.ui.component.RefreshButton
 import com.cobasendiri.youmov.ui.component.ReviewItem
@@ -59,16 +58,12 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun DetailScreen(
+    viewModel: DetailViewModel = hiltViewModel(),
     movieId: Int,
     onNavigateBack: () -> Unit
 ) {
 
     val context = LocalContext.current
-    val appContext = context.applicationContext
-
-    val viewModel: DetailViewModel = viewModel(
-        factory = ViewModelFactory.getInstance(appContext)
-    )
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 

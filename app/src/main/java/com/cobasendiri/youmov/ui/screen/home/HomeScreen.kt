@@ -17,18 +17,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.cobasendiri.youmov.R
 import com.cobasendiri.youmov.domain.model.Movie
-import com.cobasendiri.youmov.ui.ViewModelFactory
 import com.cobasendiri.youmov.ui.component.YouMovTopBar
 import com.cobasendiri.youmov.ui.theme.DarkBackground
 import com.cobasendiri.youmov.ui.theme.YouMovTheme
@@ -36,6 +34,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun HomeScreen(
+    viewModel: HomeViewModel = hiltViewModel(),
     onNavigateToFavorite: () -> Unit,
     onNavigateToDetail: (Int) -> Unit
 ) {
@@ -54,13 +53,6 @@ fun HomeScreen(
             )
         }
     ){ innerPadding ->
-
-        val context = LocalContext.current
-        val appContext = context.applicationContext
-
-        val viewModel: HomeViewModel = viewModel(
-            factory = ViewModelFactory.getInstance(appContext)
-        )
 
         val popularMovies = viewModel.popularMovies.collectAsLazyPagingItems()
         val topRatedMovies = viewModel.topRatedMovies.collectAsLazyPagingItems()

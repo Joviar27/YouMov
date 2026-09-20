@@ -13,7 +13,9 @@ import com.cobasendiri.youmov.ui.screen.detail.DetailScreen
 import com.cobasendiri.youmov.ui.screen.favorite.FavoriteScreen
 import com.cobasendiri.youmov.ui.screen.home.HomeScreen
 import com.cobasendiri.youmov.ui.theme.YouMovTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +41,7 @@ class MainActivity : ComponentActivity() {
                     }
                     composable<Screen.Detail> { backStackEntry ->
                         val args = backStackEntry.toRoute<Screen.Detail>()
-                        DetailScreen(args.movieId) {
+                        DetailScreen(movieId = args.movieId) {
                             rootNavController.popBackStack()
                         }
                     }
