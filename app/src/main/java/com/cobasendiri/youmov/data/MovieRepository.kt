@@ -11,7 +11,8 @@ import com.cobasendiri.youmov.domain.Result
 import com.cobasendiri.youmov.domain.model.FavoriteMovie
 import com.cobasendiri.youmov.domain.model.Movie
 import com.cobasendiri.youmov.domain.model.MovieDetail
-import com.cobasendiri.youmov.domain.model.Review
+import com.cobasendiri.youmov.domain.model.MovieReview
+import com.cobasendiri.youmov.domain.model.ReviewItem
 import com.cobasendiri.youmov.domain.util.mapToFavoriteMovieEntity
 import com.cobasendiri.youmov.domain.util.mapToFavoriteMovieList
 import com.cobasendiri.youmov.domain.util.mapToLandscapeMovie
@@ -104,14 +105,20 @@ class MovieRepository(
         }
     }
 
-    suspend fun getReviewList(
+    suspend fun getMovieReview(
         movieId: Int,
         page: Int
-    ): Result<List<Review>> = withContext(dispatcher){
+    ): Result<MovieReview> = withContext(dispatcher){
         try {
-            val result = apiService.getMovieReviews(movieId, page).results?.map {
-                it.mapToReview()
-            } ?: emptyList()
+            val result = apiService.getMovieReviews(movieId, page).let {
+                MovieReview(
+                    page = it.page ?: 1,
+                    totalPages = it.totalPages ?: 1,
+                    reviews = it.results?.map { reviewResponse ->
+                        reviewResponse.mapToReview()
+                    } ?: listOf()
+                )
+            }
             Result.Success(result)
         }catch (e: Exception){
             Result.Error(e)

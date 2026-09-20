@@ -7,7 +7,7 @@ import com.cobasendiri.youmov.data.remote.response.ReviewItemResponse
 import com.cobasendiri.youmov.domain.model.FavoriteMovie
 import com.cobasendiri.youmov.domain.model.Movie
 import com.cobasendiri.youmov.domain.model.MovieDetail
-import com.cobasendiri.youmov.domain.model.Review
+import com.cobasendiri.youmov.domain.model.ReviewItem
 
 fun MovieItemResponse.mapToLandscapeMovie(): Movie{
     return Movie(
@@ -30,15 +30,15 @@ fun MovieItemResponse.mapToSquareMovie(): Movie{
 fun DetailMovieResponse.mapToMovieDetail(): MovieDetail{
     return MovieDetail(
         id = this.id ?: 0,
-        imageUri = this.backdropPath ?: "",
+        imagePath = this.backdropPath ?: "",
         title = this.title ?: "",
         releaseInfo = this.releaseDate ?: "",
         description = this.overview ?: ""
     )
 }
 
-fun ReviewItemResponse.mapToReview(): Review{
-    return Review(
+fun ReviewItemResponse.mapToReview(): ReviewItem{
+    return ReviewItem(
         author = this.author ?: "",
         avatarUri = this.authorDetails?.avatarPath ?: "",
         rating = this.authorDetails?.rating?.toString() ?: "",

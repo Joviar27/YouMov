@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "favorite_movies")
 data class FavoriteMovieEntity(
     @PrimaryKey
-    val id: String,
+    val id: Int,
 
     @ColumnInfo(name = "image_path")
     val imagePath: String,

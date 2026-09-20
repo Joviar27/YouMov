@@ -1,5 +1,6 @@
 package com.cobasendiri.youmov.ui.screen.detail
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,17 +22,24 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.cobasendiri.youmov.BuildConfig
 import com.cobasendiri.youmov.R
-import com.cobasendiri.youmov.domain.model.Review
+import com.cobasendiri.youmov.domain.model.ReviewItem
+import com.cobasendiri.youmov.ui.ViewModelFactory
 import com.cobasendiri.youmov.ui.component.LoadingIndicator
 import com.cobasendiri.youmov.ui.component.RefreshButton
 import com.cobasendiri.youmov.ui.component.ReviewItem
@@ -42,34 +50,39 @@ import com.cobasendiri.youmov.ui.theme.DarkSurface
 
 @Composable
 fun DetailScreen(
+    movieId: Int,
     onNavigateBack: () -> Unit
 ) {
 
-    val reviews = List(5){
-        Review(
-            avatarUri = "",
-            author = "Author Name",
-            rating = "6.5",
-            date = "21 Desember 2026",
-            content = "Long text review of a moview, the author state" +
-                    "their opinion in this long text, but apparently it's not" +
-                    "enough to convince people otherwise, maybe we all just a spec" +
-                    "of dust in this huge universe"
-        )
+    val context = LocalContext.current
+    val appContext = context.applicationContext
+
+    val viewModel: DetailViewModel = viewModel(
+        factory = ViewModelFactory.getInstance(appContext)
+    )
+
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(state.toastMessage) {
+        Toast.makeText(context, state.toastMessage, Toast.LENGTH_SHORT).show()
+    }
+
+    LaunchedEffect(movieId) {
+        viewModel.refreshDetailPageInfo(movieId)
     }
 
     Scaffold { innerPadding ->
         DetailScreenContent(
             innerPadding = innerPadding,
-            imageUri = "",
-            title = "Movie Name",
-            isFavorite = false,
-            releaseInfo = "19 Oktober 2024",
-            description = "The overview of the movie displayed in this item apparently can get quite long yeah it can get",
-            reviews = reviews,
-            reviewSection = 1,
-            reviewSectionCount = 3,
-            loading = false,
+            imagePath = state.imagePath,
+            title = state.title,
+            isFavorite = state.isFavorite,
+            releaseInfo = state.releaseInfo,
+            description = state.description,
+            reviewItems = state.reviewItems,
+            reviewSection = state.reviewSection,
+            reviewSectionCount = state.reviewSectionCount,
+            loading = state.loading,
             error = false
         ) { event ->
             when(event){
@@ -77,13 +90,16 @@ fun DetailScreen(
                     onNavigateBack.invoke()
                 }
                 is DetailScreenEvent.OnFavoriteClick ->{
-
+                    viewModel.updateFavorite()
                 }
                 is DetailScreenEvent.OnShareClick ->{
 
                 }
                 is DetailScreenEvent.OnReviewSectionClick ->{
-
+                    viewModel.getMovieReviews(movieId, event.number)
+                }
+                is DetailScreenEvent.OnRefresh ->{
+                    viewModel.refreshDetailPageInfo(movieId)
                 }
             }
         }
@@ -93,12 +109,12 @@ fun DetailScreen(
 @Composable
 fun DetailScreenContent(
     innerPadding: PaddingValues,
-    imageUri: String,
+    imagePath: String,
     title: String,
     isFavorite: Boolean,
     releaseInfo: String,
     description: String,
-    reviews: List<Review>,
+    reviewItems: List<ReviewItem>,
     reviewSection: Int,
     reviewSectionCount: Int,
     loading: Boolean,
@@ -136,7 +152,7 @@ fun DetailScreenContent(
                 }
             )
             AsyncImage(
-                model = imageUri,
+                model = "${BuildConfig.IMAGE_BASE_URL}$imagePath",
                 fallback = painterResource(R.drawable.placeholder_landscape),
                 contentScale = ContentScale.Crop,
                 contentDescription = null
@@ -196,8 +212,8 @@ fun DetailScreenContent(
             )
             Spacer(Modifier.height(8.dp))
             LazyColumn(Modifier.fillMaxWidth()) {
-                items(reviews.count()){ index ->
-                    reviews[index].let {
+                items(reviewItems.count()){ index ->
+                    reviewItems[index].let {
                         ReviewItem(
                             avatarUri = it.avatarUri,
                             reviewAuthor = it.author,
@@ -246,8 +262,8 @@ fun ReviewSection(
 @Preview
 @Composable
 fun DetailScreenContentPrev() {
-    val reviews = List(5){
-        Review(
+    val reviewItems = List(5){
+        ReviewItem(
             avatarUri = "",
             author = "Author Name",
             rating = "6.5",
@@ -260,12 +276,12 @@ fun DetailScreenContentPrev() {
     }
     DetailScreenContent(
         innerPadding = PaddingValues(0.dp),
-        imageUri = "",
+        imagePath = "",
         title = "Movie Name",
         isFavorite = false,
         releaseInfo = "19 Oktober 2024",
         description = "The overview of the movie displayed in this item apparently can get quite long yeah it can get",
-        reviews = reviews,
+        reviewItems = reviewItems,
         reviewSection = 1,
         reviewSectionCount = 3,
         error = false,

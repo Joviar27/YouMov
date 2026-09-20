@@ -33,9 +33,9 @@ fun FavoriteScreen(
     ) { innerPadding ->
 
         val dummyFavorite = listOf(
-            FavoriteMovie("1","", "Movie One", "2024","overview of favorite overview of favorite overview of favorite overview of favorite"),
-            FavoriteMovie("2","", "Movie Two", "2022","overview of favorite overview of favorite overview of favorite overview of favorite"),
-            FavoriteMovie("3","", "Movie Three", "2020","overview of favorite overview of favorite overview of favorite overview of favorite")
+            FavoriteMovie(1,"", "Movie One", "2024","overview of favorite overview of favorite overview of favorite overview of favorite"),
+            FavoriteMovie(2,"", "Movie Two", "2022","overview of favorite overview of favorite overview of favorite overview of favorite"),
+            FavoriteMovie(3,"", "Movie Three", "2020","overview of favorite overview of favorite overview of favorite overview of favorite")
         )
 
         FavoriteScreenContent(
@@ -87,9 +87,9 @@ fun FavoriteScreenContent(
 fun FavoriteScreenContentPrev() {
 
     val dummyFavorite = listOf(
-        FavoriteMovie("1","", "Movie One", "2024","overview of favorite overview of favorite overview of favorite overview of favorite"),
-        FavoriteMovie("2","", "Movie Two", "2022","overview of favorite overview of favorite overview of favorite overview of favorite"),
-        FavoriteMovie("3","", "Movie Three", "2020","overview of favorite overview of favorite overview of favorite overview of favorite")
+        FavoriteMovie(1,"", "Movie One", "2024","overview of favorite overview of favorite overview of favorite overview of favorite"),
+        FavoriteMovie(2,"", "Movie Two", "2022","overview of favorite overview of favorite overview of favorite overview of favorite"),
+        FavoriteMovie(3,"", "Movie Three", "2020","overview of favorite overview of favorite overview of favorite overview of favorite")
     )
 
     FavoriteScreenContent(
