@@ -47,6 +47,7 @@ import com.cobasendiri.youmov.ui.component.YouMovTopBar
 import com.cobasendiri.youmov.ui.theme.DarkBackground
 import com.cobasendiri.youmov.ui.theme.DarkGrey
 import com.cobasendiri.youmov.ui.theme.DarkSurface
+import com.cobasendiri.youmov.ui.util.showToast
 
 @Composable
 fun DetailScreen(
@@ -64,7 +65,7 @@ fun DetailScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(state.toastMessage) {
-        Toast.makeText(context, state.toastMessage, Toast.LENGTH_SHORT).show()
+        context.showToast(state.toastMessage)
     }
 
     LaunchedEffect(movieId) {

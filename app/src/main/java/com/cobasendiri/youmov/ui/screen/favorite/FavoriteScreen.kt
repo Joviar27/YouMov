@@ -24,6 +24,7 @@ import com.cobasendiri.youmov.ui.ViewModelFactory
 import com.cobasendiri.youmov.ui.component.FavoriteItem
 import com.cobasendiri.youmov.ui.component.YouMovTopBar
 import com.cobasendiri.youmov.ui.theme.DarkBackground
+import com.cobasendiri.youmov.ui.util.showToast
 
 @Composable
 fun FavoriteScreen(
@@ -41,7 +42,7 @@ fun FavoriteScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(state.toastMessage) {
-        Toast.makeText(context, state.toastMessage, Toast.LENGTH_SHORT).show()
+        context.showToast(state.toastMessage)
     }
 
     Scaffold(
