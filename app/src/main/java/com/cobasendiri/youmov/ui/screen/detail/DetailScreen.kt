@@ -1,12 +1,10 @@
 package com.cobasendiri.youmov.ui.screen.detail
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,6 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -24,8 +24,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -45,9 +47,13 @@ import com.cobasendiri.youmov.ui.component.RefreshButton
 import com.cobasendiri.youmov.ui.component.ReviewItem
 import com.cobasendiri.youmov.ui.component.YouMovTopBar
 import com.cobasendiri.youmov.ui.theme.DarkBackground
-import com.cobasendiri.youmov.ui.theme.DarkGrey
 import com.cobasendiri.youmov.ui.theme.DarkSurface
+import com.cobasendiri.youmov.ui.theme.Grey
+import com.cobasendiri.youmov.ui.theme.TextPrimary
+import com.cobasendiri.youmov.ui.theme.YouMovTheme
 import com.cobasendiri.youmov.ui.util.showToast
+import com.cobasendiri.youmov.ui.util.toReadableDate
+import kotlinx.coroutines.launch
 
 @Composable
 fun DetailScreen(
@@ -64,15 +70,29 @@ fun DetailScreen(
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    LaunchedEffect(state.toastMessage) {
-        context.showToast(state.toastMessage)
+    val message = state.toastMessage
+    LaunchedEffect(message) {
+        if(message.isNotEmpty()){
+            context.showToast(message)
+            viewModel.consumeToast()
+        }
     }
 
     LaunchedEffect(movieId) {
         viewModel.refreshDetailPageInfo(movieId)
     }
 
-    Scaffold { innerPadding ->
+    Scaffold(
+        topBar = {
+            YouMovTopBar(
+                titleText = stringResource(R.string.detail),
+                backgroundColor = DarkSurface,
+                onNavigateBack = {
+                    onNavigateBack.invoke()
+                }
+            )
+        }
+    ) { innerPadding ->
         DetailScreenContent(
             innerPadding = innerPadding,
             imagePath = state.imagePath,
@@ -84,12 +104,9 @@ fun DetailScreen(
             reviewSection = state.reviewSection,
             reviewSectionCount = state.reviewSectionCount,
             loading = state.loading,
-            error = false
+            error = state.error
         ) { event ->
             when(event){
-                is DetailScreenEvent.OnNavigateBack ->{
-                    onNavigateBack.invoke()
-                }
                 is DetailScreenEvent.OnFavoriteClick ->{
                     viewModel.updateFavorite()
                 }
@@ -122,58 +139,43 @@ fun DetailScreenContent(
     error: Boolean,
     event: (DetailScreenEvent) -> Unit
 ){
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
 
-    Box(Modifier.fillMaxSize()
-        .background(DarkBackground),
-        contentAlignment = Alignment.Center
-    ){
-        if(loading){
-            LoadingIndicator(Modifier.size(48.dp))
-        }
-        if(error && !loading){
-            RefreshButton(Modifier.size(48.dp)) {
-                event.invoke(DetailScreenEvent.OnRefresh)
-            }
-        }
-    }
-
-    Column(Modifier.fillMaxSize()
+    LazyColumn(Modifier.fillMaxSize()
         .background(DarkBackground)
-        .padding(innerPadding)
+        .padding(innerPadding),
+        state = listState,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Box(Modifier
-            .fillMaxWidth()
-            .height(200.dp)
-        ){
-            YouMovTopBar(
-                titleText = title,
-                backgroundColor = DarkSurface.copy(alpha = 0.3f),
-                onNavigateBack = {
-                    event.invoke(DetailScreenEvent.OnNavigateBack)
-                }
-            )
+        item {
             AsyncImage(
+                modifier = Modifier.fillMaxWidth().height(250.dp),
                 model = "${BuildConfig.IMAGE_BASE_URL}$imagePath",
-                fallback = painterResource(R.drawable.placeholder_landscape),
+                placeholder = painterResource(R.drawable.placeholder_landscape),
                 contentScale = ContentScale.Crop,
                 contentDescription = null
             )
         }
-        Column(Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-        ) {
-            Row(Modifier.fillMaxWidth()) {
+        item {
+            Row(Modifier.padding(horizontal = 16.dp)
+                .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(
                     modifier = Modifier.weight(1f),
                     text = title,
-                    style = MaterialTheme.typography.titleMedium,
-                    maxLines = 1,
+                    style = MaterialTheme.typography.headlineSmall,
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
-                IconButton({
-                    event.invoke(DetailScreenEvent.OnFavoriteClick(""))
-                }) {
+                Spacer(Modifier.width(8.dp))
+                IconButton(
+                    modifier = Modifier.size(28.dp),
+                    onClick = {
+                        event.invoke(DetailScreenEvent.OnFavoriteClick(""))
+                    }
+                ) {
                     Image(
                         painter = painterResource(
                             if(isFavorite) R.drawable.ic_favorite_filled_32
@@ -182,10 +184,13 @@ fun DetailScreenContent(
                         contentDescription = null
                     )
                 }
-                Spacer(Modifier.width(4.dp))
-                IconButton({
-                    event.invoke(DetailScreenEvent.OnShareClick)
-                }) {
+                Spacer(Modifier.width(16.dp))
+                IconButton(
+                    modifier = Modifier.size(28.dp),
+                    onClick = {
+                        event.invoke(DetailScreenEvent.OnShareClick)
+                    }
+                ) {
                     Image(
                         painter = painterResource(R.drawable.ic_share_32),
                         contentDescription = null
@@ -193,50 +198,79 @@ fun DetailScreenContent(
                 }
             }
             Text(
-                text = releaseInfo,
+                modifier = Modifier.padding(horizontal = 16.dp),
+                text = releaseInfo.toReadableDate(),
                 style = MaterialTheme.typography.labelLarge
             )
-            Spacer(Modifier.height(16.dp))
+        }
+        item {
             Text(
+                modifier = Modifier.padding(horizontal = 16.dp),
                 text = stringResource(R.string.description),
                 style = MaterialTheme.typography.titleMedium
             )
             Spacer(Modifier.height(8.dp))
             Text(
+                modifier = Modifier.padding(horizontal = 16.dp),
                 text = description,
                 style = MaterialTheme.typography.bodyMedium
             )
-            Spacer(Modifier.height(16.dp))
+        }
+        item {
             Text(
+                modifier = Modifier.padding(horizontal = 16.dp),
                 text = stringResource(R.string.review),
                 style = MaterialTheme.typography.titleMedium
             )
             Spacer(Modifier.height(8.dp))
-            LazyColumn(Modifier.fillMaxWidth()) {
-                items(reviewItems.count()){ index ->
-                    reviewItems[index].let {
-                        ReviewItem(
-                            avatarUri = it.avatarUri,
-                            reviewAuthor = it.author,
-                            reviewRating = it.rating,
-                            reviewDate = it.date,
-                            reviewContent = it.content
-                        )
-                    }
-                }
+        }
+        items(reviewItems.count()){ index ->
+            reviewItems[index].let {
+                ReviewItem(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    avatarPath = it.avatarUri,
+                    reviewAuthor = it.author,
+                    reviewRating = it.rating,
+                    reviewDate = it.date,
+                    reviewContent = it.content
+                )
             }
-            Spacer(Modifier.height(8.dp))
-            Row(Modifier.align(Alignment.CenterHorizontally),
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
+        }
+        item {
+            Row(Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(
+                    space = 16.dp,
+                    alignment = Alignment.CenterHorizontally
+                ),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 repeat(reviewSectionCount){ index ->
+                    val numberDisplay = index + 1
                     ReviewSection(
-                        number = index,
-                        isActive = index == reviewSection
+                        number = numberDisplay,
+                        isActive = numberDisplay == reviewSection
                     ){
+                        coroutineScope.launch {
+                            listState.animateScrollToItem(3)
+                        }
                         event.invoke(DetailScreenEvent.OnReviewSectionClick(it))
                     }
                 }
+            }
+        }
+    }
+
+    if(!loading && !error) return
+    Box(Modifier.fillMaxSize()
+        .background(DarkBackground),
+        contentAlignment = Alignment.Center
+    ){
+        if(loading){
+            LoadingIndicator(Modifier.size(48.dp))
+        }
+        if(error){
+            RefreshButton(Modifier.size(48.dp)) {
+                event.invoke(DetailScreenEvent.OnRefresh)
             }
         }
     }
@@ -248,15 +282,33 @@ fun ReviewSection(
     isActive: Boolean,
     onClick: (Int) -> Unit
 ){
-    Box(Modifier
-        .background(if (isActive) DarkGrey else DarkSurface)
+    Box(Modifier.size(36.dp)
+        .clip(RoundedCornerShape(8.dp))
+        .background(if (isActive) Grey else DarkSurface)
         .clickable { onClick.invoke(number) }
     ){
         Text(
             modifier = Modifier.align(Alignment.Center),
             text = "$number",
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.titleSmall.copy(
+                color = if(isActive) DarkBackground else TextPrimary
+            )
         )
+    }
+}
+
+@Preview
+@Composable
+fun ReviewSectionPrev(){
+    YouMovTheme {
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            repeat(5){ index ->
+                ReviewSection(
+                    number = index + 1,
+                    isActive = (index+1) == 2
+                ){}
+            }
+        }
     }
 }
 
@@ -275,17 +327,19 @@ fun DetailScreenContentPrev() {
                     "of dust in this huge universe"
         )
     }
-    DetailScreenContent(
-        innerPadding = PaddingValues(0.dp),
-        imagePath = "",
-        title = "Movie Name",
-        isFavorite = false,
-        releaseInfo = "19 Oktober 2024",
-        description = "The overview of the movie displayed in this item apparently can get quite long yeah it can get",
-        reviewItems = reviewItems,
-        reviewSection = 1,
-        reviewSectionCount = 3,
-        error = false,
-        loading = false
-    ) {}
+    YouMovTheme {
+        DetailScreenContent(
+            innerPadding = PaddingValues(0.dp),
+            imagePath = "",
+            title = "Movie Name",
+            isFavorite = false,
+            releaseInfo = "19 Oktober 2024",
+            description = "The overview of the movie displayed in this item apparently can get quite long yeah it can get",
+            reviewItems = reviewItems,
+            reviewSection = 1,
+            reviewSectionCount = 3,
+            error = false,
+            loading = true
+        ) {}
+    }
 }

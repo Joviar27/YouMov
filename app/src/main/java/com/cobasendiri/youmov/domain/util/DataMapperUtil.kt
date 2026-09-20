@@ -18,7 +18,7 @@ fun MovieItemResponse.mapToLandscapeMovie(): Movie{
     )
 }
 
-fun MovieItemResponse.mapToSquareMovie(): Movie{
+fun MovieItemResponse.mapToPortraitMovie(): Movie{
     return Movie(
         id = this.id ?: 0,
         imagePath = this.posterPath ?: "",

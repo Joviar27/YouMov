@@ -1,5 +1,6 @@
 package com.cobasendiri.youmov.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.cobasendiri.youmov.domain.Result
 
@@ -12,6 +13,7 @@ abstract class BaseViewModel: ViewModel() {
         when(this){
             is Result.Success -> onSuccess?.invoke(this.data)
             is Result.Error -> {
+                Log.d("joviar","error ${this.error}")
                 onError?.invoke()
                 showToast("Something went wrong, please try again")
             }

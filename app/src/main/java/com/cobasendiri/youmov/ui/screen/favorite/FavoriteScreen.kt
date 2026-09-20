@@ -1,6 +1,5 @@
 package com.cobasendiri.youmov.ui.screen.favorite
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -41,8 +40,12 @@ fun FavoriteScreen(
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    LaunchedEffect(state.toastMessage) {
-        context.showToast(state.toastMessage)
+    val message = state.toastMessage
+    LaunchedEffect(message) {
+        if(message.isNotEmpty()){
+            context.showToast(message)
+            viewModel.consumeToast()
+        }
     }
 
     Scaffold(
@@ -86,7 +89,7 @@ fun FavoriteScreenContent(
         items(favoriteMovies.count()){ index ->
             favoriteMovies[index].let {
                 FavoriteItem(
-                    imageUri = it.imagePath,
+                    imagePath = it.imagePath,
                     title = it.title,
                     releaseInfo = it.releaseInfo,
                     overview = it.overview

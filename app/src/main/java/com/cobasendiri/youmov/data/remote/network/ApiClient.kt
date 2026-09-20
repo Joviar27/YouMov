@@ -18,23 +18,10 @@ object ApiClient {
         }
     }
 
-    private val authInterceptor = Interceptor { chain ->
-        val originalRequest = chain.request()
-        val urlWithQueryParams = originalRequest.url
-            .newBuilder()
-            .addQueryParameter("key", BuildConfig.API_KEY)
-            .build()
-
-        val newRequest = originalRequest.newBuilder()
-            .url(urlWithQueryParams)
-            .build()
-
-        chain.proceed(newRequest)
-    }
-
     private val headerInterceptor = Interceptor { chain ->
         val originalRequest = chain.request()
         val requestWithHeaders = originalRequest.newBuilder()
+            .header("Authorization", "Bearer ${BuildConfig.API_KEY}")
             .header("Accept", "application/json")
             .build()
         chain.proceed(requestWithHeaders)
@@ -42,7 +29,6 @@ object ApiClient {
 
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(loggingInterceptor)
-        .addInterceptor(authInterceptor)
         .addInterceptor(headerInterceptor)
         .connectTimeout(30, TimeUnit.SECONDS)
         .readTimeout(30, TimeUnit.SECONDS)

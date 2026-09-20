@@ -17,6 +17,7 @@ class DetailViewModel(
     val state: StateFlow<DetailScreenState> get() = _state
 
     fun refreshDetailPageInfo(movieId: Int){
+        _state.update { it.copy(error = false) }
         getMovieDetail(movieId)
         isMovieFavorite(movieId)
         getMovieReviews(movieId, 1)
@@ -27,7 +28,7 @@ class DetailViewModel(
             showLoading(true)
             movieRepository.getMovieDetail(movieId).handleResult(
                 onError = {
-                    _state.update { it.copy(error = true ) }
+                    _state.update { it.copy(error = true, loading = false) }
                 }
             ) { movieDetail ->
                 _state.update {
@@ -98,6 +99,12 @@ class DetailViewModel(
     override fun showToast(message: String) {
         _state.update {
             it.copy(toastMessage = message)
+        }
+    }
+
+    fun consumeToast(){
+        _state.update {
+            it.copy(toastMessage = "")
         }
     }
 

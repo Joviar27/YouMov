@@ -12,13 +12,12 @@ import com.cobasendiri.youmov.domain.model.FavoriteMovie
 import com.cobasendiri.youmov.domain.model.Movie
 import com.cobasendiri.youmov.domain.model.MovieDetail
 import com.cobasendiri.youmov.domain.model.MovieReview
-import com.cobasendiri.youmov.domain.model.ReviewItem
 import com.cobasendiri.youmov.domain.util.mapToFavoriteMovieEntity
 import com.cobasendiri.youmov.domain.util.mapToFavoriteMovieList
 import com.cobasendiri.youmov.domain.util.mapToLandscapeMovie
 import com.cobasendiri.youmov.domain.util.mapToMovieDetail
 import com.cobasendiri.youmov.domain.util.mapToReview
-import com.cobasendiri.youmov.domain.util.mapToSquareMovie
+import com.cobasendiri.youmov.domain.util.mapToPortraitMovie
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -75,7 +74,7 @@ class MovieRepository(
             }
         }.flow.map { pagingData ->
             pagingData.map {
-                it.mapToSquareMovie()
+                it.mapToPortraitMovie()
             }
         }
     }
@@ -89,7 +88,7 @@ class MovieRepository(
             }
         }.flow.map { pagingData ->
             pagingData.map {
-                it.mapToSquareMovie()
+                it.mapToPortraitMovie()
             }
         }
     }

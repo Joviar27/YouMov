@@ -46,10 +46,12 @@ fun PagingLandscapeMovieList(
     }
 
     Box(modifier.fillMaxWidth()
-        .height(160.dp)
+        .height(180.dp)
     ) {
         if(refreshLoading){
-            LoadingIndicator(Modifier.size(48.dp))
+            LoadingIndicator(Modifier.size(40.dp)
+                .align(Alignment.Center)
+            )
         }
         if(refreshError){
             RefreshButton(

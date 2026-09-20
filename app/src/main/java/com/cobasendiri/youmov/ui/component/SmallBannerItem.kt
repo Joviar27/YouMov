@@ -32,7 +32,8 @@ fun SmallBannerItem(
 ) {
     Column(Modifier.width(160.dp)){
         AsyncImage(
-            modifier = Modifier.size(160.dp)
+            modifier = Modifier.width(160.dp)
+                .height(220.dp)
                 .clip(RoundedCornerShape(16.dp))
                 .clickable(onClick = onClick),
             model = "${BuildConfig.IMAGE_BASE_URL}$imagePath",
@@ -48,7 +49,7 @@ fun SmallBannerItem(
             overflow = TextOverflow.Ellipsis
         )
         Text(
-            text = releaseInfo,
+            text = releaseInfo.take(4),
             style = MaterialTheme.typography.labelLarge
         )
     }

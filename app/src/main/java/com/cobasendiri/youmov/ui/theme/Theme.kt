@@ -9,7 +9,7 @@ import androidx.core.view.WindowCompat
 
 @Composable
 fun YouMovTheme(
-    isLightSystemBar: Boolean = true,
+    isLightSystemBar: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     val view = LocalView.current

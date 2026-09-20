@@ -39,7 +39,7 @@ fun LargeBannerItem(
     onClick: () -> Unit
 ) {
     Box(Modifier
-        .size(width = 320.dp, height = 160.dp)
+        .size(width = 320.dp, height = 180.dp)
         .clip(RoundedCornerShape(16.dp))
         .clickable(onClick = onClick)
     ){
@@ -57,13 +57,13 @@ fun LargeBannerItem(
         ){
             Text(
                 text = buildAnnotatedString {
-                    withStyle(style = MaterialTheme.typography.titleMedium.toSpanStyle()){
+                    withStyle(style = MaterialTheme.typography.titleSmall.toSpanStyle()){
                         append(title)
                     }
-                    withStyle(style = MaterialTheme.typography.titleMedium.copy(
+                    withStyle(style = MaterialTheme.typography.titleSmall.copy(
                         fontWeight = FontWeight.Normal
                     ).toSpanStyle()){
-                        append(" ($releaseInfo)")
+                        append(" (${releaseInfo.take(4)})")
                     }
                 },
                 maxLines = 2,

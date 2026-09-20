@@ -10,6 +10,8 @@
     <string name="detail">Detail</string>
     <string name="description">Description</string>
     <string name="review">Review</string>
+    <string name="show_more">Show more</string>
+    <string name="show_less">Show less</string>
 
     <!--  Favorite  -->
     <string name="favorite">Favorite</string>

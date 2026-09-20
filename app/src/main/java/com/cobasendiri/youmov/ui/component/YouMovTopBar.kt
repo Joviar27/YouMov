@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.IconButton
@@ -37,18 +39,18 @@ fun YouMovTopBar(
         .fillMaxWidth()
         .background(backgroundColor)
         .statusBarsPadding()
-        .padding(16.dp),
+        .padding( 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         onNavigateBack?.let {
-            IconButton(it) {
+            IconButton(modifier = Modifier.size(28.dp), onClick = it) {
                 Image(
                     painter = painterResource(R.drawable.ic_arrow_left_32),
                     contentDescription = null
                 )
             }
+            Spacer(Modifier.width(16.dp))
         }
-        Spacer(Modifier.width(16.dp))
         Text(
             text = titleText,
             style = MaterialTheme.typography.headlineSmall

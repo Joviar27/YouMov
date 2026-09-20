@@ -8,6 +8,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -41,7 +44,7 @@ fun HomeScreen(
             YouMovTopBar(
                 titleText = stringResource(R.string.app_name),
                 endActions = {
-                    IconButton(onNavigateToFavorite) {
+                    IconButton(modifier = Modifier.size(28.dp), onClick = onNavigateToFavorite) {
                         Image(
                             painter = painterResource(R.drawable.ic_favorite_filled_32),
                             contentDescription = null
@@ -107,7 +110,10 @@ fun HomeScreenContent(
     nowPlayingMovies: LazyPagingItems<Movie>,
     event: (HomeScreenEvent) -> Unit
 ){
+    val scrollState = rememberScrollState()
+
     Column(Modifier.fillMaxSize()
+        .verticalScroll(scrollState)
         .background(DarkBackground)
         .padding(innerPadding)
         .padding(vertical = 16.dp)
@@ -136,7 +142,7 @@ fun HomeScreenContent(
             style = MaterialTheme.typography.titleMedium
         )
         Spacer(Modifier.height(8.dp))
-        PagingSquareMovieList(
+        PagingPortraitMovieList(
             moviePagingItems = topRatedMovies,
             onItemClick = {
                 event.invoke(HomeScreenEvent.OnMovieClicked(it))
@@ -154,7 +160,7 @@ fun HomeScreenContent(
             style = MaterialTheme.typography.titleMedium
         )
         Spacer(Modifier.height(8.dp))
-        PagingSquareMovieList(
+        PagingPortraitMovieList(
             moviePagingItems = nowPlayingMovies,
             onItemClick = {
                 event.invoke(HomeScreenEvent.OnMovieClicked(it))

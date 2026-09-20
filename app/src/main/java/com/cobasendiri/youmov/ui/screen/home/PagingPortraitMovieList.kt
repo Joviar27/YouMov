@@ -27,7 +27,7 @@ import com.cobasendiri.youmov.ui.theme.YouMovTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
-fun PagingSquareMovieList(
+fun PagingPortraitMovieList(
     modifier: Modifier = Modifier,
     moviePagingItems: LazyPagingItems<Movie>,
     onItemClick: (Int) -> Unit,
@@ -47,10 +47,12 @@ fun PagingSquareMovieList(
 
     Box(modifier
         .fillMaxWidth()
-        .height(210.dp)
+        .height(270.dp)
     ) {
         if(refreshLoading){
-            LoadingIndicator(Modifier.size(48.dp))
+            LoadingIndicator(Modifier.size(40.dp)
+                .align(Alignment.Center)
+            )
         }
         if(refreshError){
             RefreshButton(
@@ -91,7 +93,7 @@ fun PagingSquareMovieList(
 
 @Preview
 @Composable
-fun PagingSquareMovieListPreview(){
+fun PagingPortraitMovieListPreview(){
     val dummyPaging = MutableStateFlow(PagingData.from(
         listOf(
             Movie(1,"", "Movie One", "2024"),
@@ -102,7 +104,7 @@ fun PagingSquareMovieListPreview(){
     ))
     val dummy = dummyPaging.collectAsLazyPagingItems()
     YouMovTheme {
-        PagingSquareMovieList(
+        PagingPortraitMovieList(
             moviePagingItems = dummy,
             onItemClick = {},
             onRefreshClick = {},

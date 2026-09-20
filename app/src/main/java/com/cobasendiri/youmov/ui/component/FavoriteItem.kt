@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,12 +20,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.cobasendiri.youmov.BuildConfig
 import com.cobasendiri.youmov.R
 import com.cobasendiri.youmov.ui.theme.YouMovTheme
+import com.cobasendiri.youmov.ui.util.toReadableDate
 
 @Composable
 fun FavoriteItem(
-    imageUri: String,
+    imagePath: String,
     title: String,
     releaseInfo: String,
     overview: String,
@@ -37,7 +38,7 @@ fun FavoriteItem(
             modifier = Modifier
                 .size(160.dp)
                 .clip(RoundedCornerShape(16.dp)),
-            model = imageUri,
+            model = "${BuildConfig.IMAGE_BASE_URL}$imagePath",
             placeholder = painterResource(R.drawable.placeholder_square),
             contentScale = ContentScale.Crop,
             contentDescription = null
@@ -52,7 +53,7 @@ fun FavoriteItem(
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = releaseInfo,
+                text = releaseInfo.toReadableDate(),
                 style = MaterialTheme.typography.labelLarge
             )
             Spacer(Modifier.height(4.dp))
@@ -71,7 +72,7 @@ fun FavoriteItem(
 fun FavoriteItemPrev() {
     YouMovTheme {
         FavoriteItem(
-            imageUri = "",
+            imagePath = "",
             title = "Movie Title",
             releaseInfo = "19 Oktober 2024",
             overview = "The overview of the movie displayed in this item apparently can get quite long yeah it can get",

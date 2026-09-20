@@ -36,4 +36,10 @@ class FavoriteViewModel(
             it.copy(toastMessage = message)
         }
     }
+
+    fun consumeToast(){
+        _state.update {
+            it.copy(toastMessage = "")
+        }
+    }
 }
