@@ -4,5 +4,5 @@ interface FavoriteScreenEvent {
 
     data object OnNavigateBack: FavoriteScreenEvent
 
-    data class OnMovieClicked(val id: String): FavoriteScreenEvent
+    data class OnMovieClicked(val id: Int): FavoriteScreenEvent
 }

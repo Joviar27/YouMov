@@ -1,5 +1,6 @@
 package com.cobasendiri.youmov.ui.screen.favorite
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -8,20 +9,40 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cobasendiri.youmov.R
 import com.cobasendiri.youmov.domain.model.FavoriteMovie
+import com.cobasendiri.youmov.ui.ViewModelFactory
 import com.cobasendiri.youmov.ui.component.FavoriteItem
 import com.cobasendiri.youmov.ui.component.YouMovTopBar
 import com.cobasendiri.youmov.ui.theme.DarkBackground
 
 @Composable
 fun FavoriteScreen(
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    onMovieClicked: (Int) -> Unit
 ) {
+
+    val context = LocalContext.current
+    val appContext = context.applicationContext
+
+    val viewModel: FavoriteViewModel = viewModel(
+        factory = ViewModelFactory.getInstance(appContext)
+    )
+
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(state.toastMessage) {
+        Toast.makeText(context, state.toastMessage, Toast.LENGTH_SHORT).show()
+    }
 
     Scaffold(
         topBar = {
@@ -32,22 +53,16 @@ fun FavoriteScreen(
         }
     ) { innerPadding ->
 
-        val dummyFavorite = listOf(
-            FavoriteMovie(1,"", "Movie One", "2024","overview of favorite overview of favorite overview of favorite overview of favorite"),
-            FavoriteMovie(2,"", "Movie Two", "2022","overview of favorite overview of favorite overview of favorite overview of favorite"),
-            FavoriteMovie(3,"", "Movie Three", "2020","overview of favorite overview of favorite overview of favorite overview of favorite")
-        )
-
         FavoriteScreenContent(
             innerPadding = innerPadding,
-            favoriteMovies = dummyFavorite
+            favoriteMovies = state.favoriteMovies
         ) { event ->
             when(event){
                 is FavoriteScreenEvent.OnNavigateBack ->{
                     onNavigateBack.invoke()
                 }
                 is FavoriteScreenEvent.OnMovieClicked ->{
-
+                    onMovieClicked.invoke(event.id)
                 }
             }
         }
@@ -75,7 +90,7 @@ fun FavoriteScreenContent(
                     releaseInfo = it.releaseInfo,
                     overview = it.overview
                 ) {
-                    event.invoke(FavoriteScreenEvent.OnMovieClicked(""))
+                    event.invoke(FavoriteScreenEvent.OnMovieClicked(it.id))
                 }
             }
         }

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.cobasendiri.youmov.data.MovieRepository
 import com.cobasendiri.youmov.di.Injection
 import com.cobasendiri.youmov.ui.screen.detail.DetailViewModel
+import com.cobasendiri.youmov.ui.screen.favorite.FavoriteViewModel
 import com.cobasendiri.youmov.ui.screen.home.HomeViewModel
 
 class ViewModelFactory(
@@ -29,6 +30,8 @@ class ViewModelFactory(
             return HomeViewModel(repository) as T
         }else if (modelClass.isAssignableFrom(DetailViewModel::class.java)) {
             return DetailViewModel(repository) as T
+        }else if (modelClass.isAssignableFrom(FavoriteViewModel::class.java)) {
+            return FavoriteViewModel(repository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
