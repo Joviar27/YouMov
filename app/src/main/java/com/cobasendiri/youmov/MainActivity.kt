@@ -4,44 +4,59 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
+import com.cobasendiri.youmov.ui.nav.Screen
+import com.cobasendiri.youmov.ui.screen.detail.DetailScreen
+import com.cobasendiri.youmov.ui.screen.favorite.FavoriteScreen
+import com.cobasendiri.youmov.ui.screen.home.HomeScreen
 import com.cobasendiri.youmov.ui.theme.YouMovTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+
+            val rootNavController = rememberNavController()
+
             YouMovTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                NavHost(
+                    navController = rootNavController,
+                    startDestination = Screen.Home
+                ){
+                    composable<Screen.Home>{
+                        HomeScreen(
+                            onNavigateToDetail = {
+                                rootNavController.navigate(Screen.Detail(it))
+                            },
+                            onNavigateToFavorite = {
+                                rootNavController.navigate(Screen.Favorite)
+                            }
+                        )
+                    }
+                    composable<Screen.Detail> { backStackEntry ->
+                        val args = backStackEntry.toRoute<Screen.Detail>()
+                        DetailScreen(movieId = args.movieId) {
+                            rootNavController.popBackStack()
+                        }
+                    }
+                    composable<Screen.Favorite> {
+                        FavoriteScreen(
+                            onMovieClicked = {
+                                rootNavController.navigate(Screen.Detail(it))
+                            },
+                            onNavigateBack = {
+                                rootNavController.popBackStack()
+                            }
+                        )
+                    }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    YouMovTheme {
-        Greeting("Android")
     }
 }
