@@ -4,11 +4,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.ui.Modifier
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
+import com.cobasendiri.youmov.ui.nav.Screen
+import com.cobasendiri.youmov.ui.screen.detail.DetailScreen
+import com.cobasendiri.youmov.ui.screen.favorite.FavoriteScreen
+import com.cobasendiri.youmov.ui.screen.home.HomeScreen
 import com.cobasendiri.youmov.ui.theme.YouMovTheme
 
 class MainActivity : ComponentActivity() {
@@ -16,9 +19,40 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+
+            val rootNavController = rememberNavController()
+
             YouMovTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Column(Modifier.padding(innerPadding)) { }
+                NavHost(
+                    navController = rootNavController,
+                    startDestination = Screen.Home
+                ){
+                    composable<Screen.Home>{
+                        HomeScreen(
+                            onNavigateToDetail = {
+                                rootNavController.navigate(Screen.Detail(it))
+                            },
+                            onNavigateToFavorite = {
+                                rootNavController.navigate(Screen.Favorite)
+                            }
+                        )
+                    }
+                    composable<Screen.Detail> { backStackEntry ->
+                        val args = backStackEntry.toRoute<Screen.Detail>()
+                        DetailScreen(args.movieId) {
+                            rootNavController.popBackStack()
+                        }
+                    }
+                    composable<Screen.Favorite> {
+                        FavoriteScreen(
+                            onMovieClicked = {
+                                rootNavController.navigate(Screen.Detail(it))
+                            },
+                            onNavigateBack = {
+                                rootNavController.popBackStack()
+                            }
+                        )
+                    }
                 }
             }
         }
